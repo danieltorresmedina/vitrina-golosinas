@@ -121,7 +121,7 @@ export default function Shop() {
       <main>
         <section className="hero">
           <div className="hero__copy">
-            <h1>Cuchuflíes, cocadas y gomitas listas para pedir</h1>
+            <h1>Cuchuflíes, cocadas y pastelitos listos para pedir</h1>
             <p>
               Elige tus golosinas, arma el carro y envíanos el pedido por WhatsApp. Coordinamos el pago y la
               entrega contigo.
