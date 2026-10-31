@@ -150,7 +150,7 @@ export default function Vitrina() {
             </p>
           </div>
           <div className="sello" aria-hidden="true">
-            <span>Pedí por</span>
+            <span>Pide por</span>
             <strong>WhatsApp</strong>
           </div>
         </section>
