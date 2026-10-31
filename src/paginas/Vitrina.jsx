@@ -17,7 +17,7 @@ import Carro from '../componentes/Carro.jsx';
 const EMOJIS_POR_CATEGORIA = [
   [/cuchufl/i, '🥖'],
   [/cocad/i, '🥥'],
-  [/gomit|gomas/i, '🐻'],
+  [/pastel/i, '🧁'],
   [/choco/i, '🍫'],
   [/pack|caja|combo/i, '🎁'],
 ];
@@ -150,7 +150,7 @@ export default function Vitrina() {
             </p>
           </div>
           <div className="sello" aria-hidden="true">
-            <span>Pide por</span>
+            <span>Pedí por</span>
             <strong>WhatsApp</strong>
           </div>
         </section>

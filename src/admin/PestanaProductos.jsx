@@ -18,7 +18,7 @@ import {
 import { usarCarga } from './usarCarga';
 
 // Categorías sugeridas al escribir (además de las que ya existan en tus productos).
-const CATEGORIAS_SUGERIDAS = ['Cuchuflíes', 'Cocadas', 'Gomitas', 'Packs'];
+const CATEGORIAS_SUGERIDAS = ['Cuchuflíes', 'Cocadas', 'Pastelitos', 'Packs'];
 
 /** Formulario para crear un producto nuevo o editar uno existente. */
 function FormularioProducto({ producto, categorias, alGuardar, alCancelar }) {

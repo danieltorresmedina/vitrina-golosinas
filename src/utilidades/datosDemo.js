@@ -15,7 +15,7 @@ export const PRODUCTOS_DEMO = [
   { id: 'd3', nombre: 'Caja de 6 cuchuflíes', descripcion: 'Mezcla de sabores para compartir.', categoria: 'Cuchuflíes', imagenUrl: null, precio: 3990 },
   { id: 'd4', nombre: 'Cocada tradicional', descripcion: 'Coco rallado y azúcar, receta de la abuela.', categoria: 'Cocadas', imagenUrl: null, precio: 1200 },
   { id: 'd5', nombre: 'Cocada de manjar', descripcion: 'Con un corazón de manjar.', categoria: 'Cocadas', imagenUrl: null, precio: 1400 },
-  { id: 'd6', nombre: 'Gomitas ositos 200 g', descripcion: 'Frutales y blanditas.', categoria: 'Gomitas', imagenUrl: null, precio: 2490 },
-  { id: 'd7', nombre: 'Gomitas ácidas 150 g', descripcion: 'Con cubierta de azúcar ácida.', categoria: 'Gomitas', imagenUrl: null, precio: 2290 },
-  { id: 'd8', nombre: 'Pack degustación', descripcion: '2 cuchuflíes, 1 cocada y una bolsita de gomitas.', categoria: 'Packs', imagenUrl: null, precio: 5490 },
+  { id: 'd6', nombre: 'Pastelito de manjar', descripcion: 'Masa suave rellena de manjar.', categoria: 'Pastelitos', imagenUrl: null, precio: 1300 },
+  { id: 'd7', nombre: 'Pastelito de frutilla', descripcion: 'Con crema y frutilla.', categoria: 'Pastelitos', imagenUrl: null, precio: 1500 },
+  { id: 'd8', nombre: 'Pack degustación', descripcion: '2 cuchuflíes, 1 cocada y 1 pastelito.', categoria: 'Packs', imagenUrl: null, precio: 5490 },
 ];

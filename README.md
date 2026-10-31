@@ -1,6 +1,6 @@
 # Vitrina de golosinas
 
-Vitrina web para cuchuflíes, cocadas y gomitas: los clientes ven los productos, arman un carro y el pedido te llega por WhatsApp. Incluye un panel privado (`/admin`) para subir productos con foto y precio, y un módulo de compras que calcula el precio de venta.
+Vitrina web para cuchuflíes, cocadas y pastelitos: los clientes ven los productos, arman un carro y el pedido te llega por WhatsApp. Incluye un panel privado (`/admin`) para subir productos con foto y precio, y un módulo de compras que calcula el precio de venta.
 
 **Tecnologías:** React + Vite (JavaScript) · Supabase (base de datos, login e imágenes) · Cloudflare (hosting gratis).
 
