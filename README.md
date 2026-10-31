@@ -154,3 +154,25 @@ Copia `.env.example` a `.env` y pega los dos valores. Reinicia `npm run dev`.
 
 - **Supabase Free:** 500 MB de base de datos, 1 GB de archivos, pausa tras 7 días sin actividad (se reactiva desde su panel).
 - **Cloudflare:** los archivos estáticos son ilimitados; esta app no usa funciones de servidor.
+
+## Visitas y SEO
+
+**Contador de visitas (GoatCounter, gratis, sin cookies).** Panel: https://danieltorresmedina.goatcounter.com
+- El script está en `index.html`. No cuenta `/admin` ni `localhost`.
+- Además de las visitas, registra el evento **`pedido-whatsapp`** cada vez que alguien toca "Enviar pedido por WhatsApp" (se ve en el panel, sección *Events*; el código está en `src/componentes/Carro.jsx`). La cuenta depende del navegador del cliente, así que puede quedar algo por debajo de los pedidos reales: la fuente exacta sigue siendo la pestaña **Pedidos** del admin.
+- Tasa de conversión aproximada = pedidos ÷ visitas.
+
+**SEO.** Qué hay y dónde está:
+| Qué | Dónde |
+|---|---|
+| Título, descripción, idioma `es-CL`, dirección canónica | `index.html` |
+| Vista previa al compartir (WhatsApp, Instagram, Facebook) | `index.html` (`og:*`) + `public/vista-previa.png` (1200×630) |
+| Datos estructurados (negocio con reparto en la Región Metropolitana) | `index.html` (JSON-LD) |
+| Qué indexar y mapa del sitio | `public/robots.txt`, `public/sitemap.xml` (el admin queda excluido) |
+
+**Cuando tengas dominio propio** cambia la dirección `https://vitrina-golosinas.dan-torresmedina.workers.dev` en `index.html` (canonical, `og:url`, `og:image`, JSON-LD), `public/robots.txt` y `public/sitemap.xml`. Si cambias el contador a otro servicio, solo se reemplaza el bloque marcado en `index.html`.
+
+**Pasos fuera del código (los más rentables):**
+1. **Google Business Profile** (gratis): ficha del negocio con el enlace de la vitrina. Es lo que más ayuda para búsquedas locales.
+2. **Google Search Console** (gratis): verifica el sitio, envía `sitemap.xml` y mira con qué búsquedas llega la gente.
+3. Comparte el enlace por Instagram y WhatsApp: con un dominio `workers.dev` casi no hay tráfico desde Google, así que al inicio las visitas vienen de ahí.

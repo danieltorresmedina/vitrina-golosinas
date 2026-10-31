@@ -53,6 +53,13 @@ export default function Carro({ abierto, alCerrar, numeroWhatsapp, nombreTienda 
     ]);
     setEnviando(false);
 
+    // Cuenta el pedido en GoatCounter (aparece como evento "pedido-whatsapp"). Si el contador no cargó, no pasa nada.
+    try {
+      window.goatcounter?.count({ path: 'pedido-whatsapp', title: 'Pedido enviado por WhatsApp', event: true });
+    } catch {
+      /* las estadísticas nunca deben impedir un pedido */
+    }
+
     setPedidoEnviado({ url, codigo });
     vaciar();
     window.location.href = url; // abre WhatsApp

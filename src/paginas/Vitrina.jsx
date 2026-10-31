@@ -143,14 +143,14 @@ export default function Vitrina() {
       <main>
         <section className="portada">
           <div className="portada__texto">
-            <h1>Cuchuflíes, cocadas y gomitas listas para pedir</h1>
+            <h1>Cuchuflíes, cocadas y pastelitos listos para pedir</h1>
             <p>
               Elige tus golosinas, arma el carro y envíanos el pedido por WhatsApp. Coordinamos el pago y la
               entrega contigo.
             </p>
           </div>
           <div className="sello" aria-hidden="true">
-            <span>Pedí por</span>
+            <span>Pide por</span>
             <strong>WhatsApp</strong>
           </div>
         </section>

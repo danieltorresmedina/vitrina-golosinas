@@ -1,0 +1,6 @@
+# Todos los buscadores pueden leer la vitrina; el panel de administración queda fuera.
+User-agent: *
+Allow: /
+Disallow: /admin
+
+Sitemap: https://vitrina-golosinas.dan-torresmedina.workers.dev/sitemap.xml

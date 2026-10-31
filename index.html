@@ -1,15 +1,68 @@
 <!doctype html>
-<html lang="es">
+<html lang="es-CL">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#FF5E9C" />
-    <meta name="description" content="Cuchuflíes, cocadas, gomitas y más. Arma tu carro y pide por WhatsApp." />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>Vitrina de golosinas</title>
+
+    <!-- ===== SEO: lo que ve Google ===== -->
+    <title>Golosinas a domicilio en Santiago | Cuchuflíes, cocadas y gomitas</title>
+    <meta
+      name="description"
+      content="Cuchuflíes, cocadas, pastelitos y más golosinas. Arma tu carro y pide por WhatsApp. Despacho a domicilio en la Región Metropolitana."
+    />
+    <!-- Cuando tengas dominio propio, cambia esta dirección (y la de og:url, og:image, sitemap.xml y robots.txt). -->
+    <link rel="canonical" href="https://vitrina-golosinas.dan-torresmedina.workers.dev/" />
+
+    <!-- ===== Vista previa al compartir el enlace (WhatsApp, Instagram, Facebook) ===== -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_CL" />
+    <meta property="og:site_name" content="Vitrina de golosinas" />
+    <meta property="og:title" content="Golosinas a domicilio en Santiago" />
+    <meta property="og:description" content="Cuchuflíes, cocadas y gomitas. Arma tu carro y pide por WhatsApp." />
+    <meta property="og:url" content="https://vitrina-golosinas.dan-torresmedina.workers.dev/" />
+    <meta property="og:image" content="https://vitrina-golosinas.dan-torresmedina.workers.dev/vista-previa.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Vitrina de golosinas: cuchuflíes, cocadas y gomitas. Pide por WhatsApp." />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- ===== Datos estructurados: le explican a Google qué es el negocio ===== -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Store",
+        "name": "Vitrina de golosinas",
+        "description": "Cuchuflíes, cocadas, gomitas y más golosinas. Pedidos por WhatsApp con despacho a domicilio.",
+        "url": "https://vitrina-golosinas.dan-torresmedina.workers.dev/",
+        "image": "https://vitrina-golosinas.dan-torresmedina.workers.dev/vista-previa.png",
+        "areaServed": {
+          "@type": "AdministrativeArea",
+          "name": "Región Metropolitana de Santiago",
+          "containedInPlace": { "@type": "Country", "name": "Chile" }
+        },
+        "currenciesAccepted": "CLP"
+      }
+    </script>
+
+    <!-- ===== Contador de visitas (GoatCounter): sin cookies, gratis. Estadísticas en
+         https://danieltorresmedina.goatcounter.com  · No cuenta tus visitas a /admin ni a localhost. ===== -->
+    <script>
+      window.goatcounter = { no_onload: location.pathname.indexOf('/admin') === 0 };
+    </script>
+    <script
+      data-goatcounter="https://danieltorresmedina.goatcounter.com/count"
+      async
+      src="https://gc.zgo.at/count.js"
+    ></script>
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      Vitrina de golosinas: cuchuflíes, cocadas, pastelitos y más. Pide por WhatsApp con despacho a domicilio en la
+      Región Metropolitana. Activa JavaScript para ver el catálogo.
+    </noscript>
     <!-- Punto de entrada de la aplicación -->
     <script type="module" src="/src/principal.jsx"></script>
   </body>
