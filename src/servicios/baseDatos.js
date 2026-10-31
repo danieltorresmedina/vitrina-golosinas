@@ -1,28 +1,25 @@
 /**
  * ÚNICO archivo que conversa con las tablas de Supabase.
  *
- * Por qué existe: las tablas y columnas de la base están en inglés (products, price, ...)
- * porque ya hay datos reales guardados y renombrarlas exigiría una migración.
- * Aquí se traduce todo: hacia afuera (el resto del código) los nombres son en español,
- * hacia adentro (las consultas a Supabase) se usan los nombres reales de la base.
+ * Las tablas y columnas de la base están en español con guion bajo (nombre_tienda, creado_en...).
+ * En el código JavaScript se usa la misma palabra en camelCase (nombreTienda, creadoEn...),
+ * que es la convención de JS. Los "traductores" de abajo solo hacen ese cambio de formato.
  *
  * DICCIONARIO (base de datos → código)
- *   settings   → ajustes     store_name → nombreTienda      whatsapp_number → whatsapp
- *                            iva_pct → ivaPct                default_margin_pct → margenSugeridoPct
- *   products   → productos   name → nombre                   description → descripcion
- *                            category → categoria            image_url → imagenUrl
- *                            price → precio                  active → activo
- *   purchases  → compras     product_id → productoId         supplier → proveedor
- *                            quantity → cantidad             unit_cost → costoUnitario
- *                            cost_includes_iva → costoIncluyeIva   margin_pct → margenPct
- *                            net_cost → costoNeto            suggested_price → precioSugerido
- *                            purchased_at → fechaCompra
- *   orders     → pedidos     code → codigo                   customer_name → cliente
- *                            note → nota                     items → articulos   total → total
- *                            created_at → creadoEn
- *   (dentro de items/articulos: name → nombre, price → precio, qty → cantidad)
+ *   ajustes    nombre_tienda → nombreTienda    whatsapp → whatsapp
+ *              iva_pct → ivaPct                margen_sugerido_pct → margenSugeridoPct
+ *   productos  nombre, descripcion, categoria, precio, activo (igual)
+ *              imagen_url → imagenUrl
+ *   compras    producto_id → productoId        proveedor, cantidad (igual)
+ *              costo_unitario → costoUnitario  costo_incluye_iva → costoIncluyeIva
+ *              iva_pct → ivaPct                margen_pct → margenPct
+ *              costo_neto → costoNeto          precio_sugerido → precioSugerido
+ *              fecha_compra → fechaCompra
+ *   pedidos    codigo, cliente, nota, total (igual)
+ *              articulos (lista JSON de { id, nombre, precio, cantidad })
+ *              creado_en → creadoEn
  *
- * Si algún día se renombran las columnas, solo hay que cambiar ESTE archivo.
+ * Si algún día se renombra una columna, solo hay que cambiar ESTE archivo.
  */
 import { supabase, BUCKET_IMAGENES } from './supabase';
 import { AJUSTES_DEMO, PRODUCTOS_DEMO } from '../utilidades/datosDemo';
@@ -40,44 +37,44 @@ const AJUSTES_POR_DEFECTO = {
 
 const aProducto = (fila) => ({
   id: fila.id,
-  nombre: fila.name,
-  descripcion: fila.description ?? '',
-  categoria: fila.category,
-  imagenUrl: fila.image_url,
-  precio: fila.price,
-  activo: fila.active,
+  nombre: fila.nombre,
+  descripcion: fila.descripcion ?? '',
+  categoria: fila.categoria,
+  imagenUrl: fila.imagen_url,
+  precio: fila.precio,
+  activo: fila.activo,
 });
 
 const aAjustes = (fila) => ({
-  nombreTienda: fila.store_name,
-  whatsapp: fila.whatsapp_number,
+  nombreTienda: fila.nombre_tienda,
+  whatsapp: fila.whatsapp,
   ivaPct: Number(fila.iva_pct ?? AJUSTES_POR_DEFECTO.ivaPct),
-  margenSugeridoPct: Number(fila.default_margin_pct ?? AJUSTES_POR_DEFECTO.margenSugeridoPct),
+  margenSugeridoPct: Number(fila.margen_sugerido_pct ?? AJUSTES_POR_DEFECTO.margenSugeridoPct),
 });
 
 const aCompra = (fila) => ({
   id: fila.id,
-  productoId: fila.product_id,
-  productoNombre: fila.products?.name ?? null, // viene del "join" con la tabla products
-  proveedor: fila.supplier,
-  cantidad: fila.quantity,
-  costoUnitario: Number(fila.unit_cost),
-  costoIncluyeIva: fila.cost_includes_iva,
+  productoId: fila.producto_id,
+  productoNombre: fila.productos?.nombre ?? null, // viene del "join" con la tabla productos
+  proveedor: fila.proveedor,
+  cantidad: fila.cantidad,
+  costoUnitario: Number(fila.costo_unitario),
+  costoIncluyeIva: fila.costo_incluye_iva,
   ivaPct: Number(fila.iva_pct),
-  margenPct: Number(fila.margin_pct),
-  costoNeto: Number(fila.net_cost),
-  precioSugerido: fila.suggested_price,
-  fechaCompra: fila.purchased_at,
+  margenPct: Number(fila.margen_pct),
+  costoNeto: Number(fila.costo_neto),
+  precioSugerido: fila.precio_sugerido,
+  fechaCompra: fila.fecha_compra,
 });
 
 const aPedido = (fila) => ({
   id: fila.id,
-  codigo: fila.code,
-  cliente: fila.customer_name,
-  nota: fila.note,
-  articulos: (fila.items ?? []).map((a) => ({ id: a.id, nombre: a.name, precio: a.price, cantidad: a.qty })),
+  codigo: fila.codigo,
+  cliente: fila.cliente,
+  nota: fila.nota,
+  articulos: fila.articulos ?? [], // ya viene como [{ id, nombre, precio, cantidad }]
   total: fila.total,
-  creadoEn: fila.created_at,
+  creadoEn: fila.creado_en,
 });
 
 /** Si Supabase respondió con error, lo lanza para que la pantalla muestre el mensaje. */
@@ -96,12 +93,12 @@ export async function cargarVitrina() {
 
   const [productos, ajustes] = await Promise.all([
     supabase
-      .from('products')
-      .select('id,name,description,category,image_url,price')
-      .eq('active', true)
-      .order('category')
-      .order('name'),
-    supabase.from('settings').select('store_name,whatsapp_number').eq('id', 1).maybeSingle(),
+      .from('productos')
+      .select('id,nombre,descripcion,categoria,imagen_url,precio')
+      .eq('activo', true)
+      .order('categoria')
+      .order('nombre'),
+    supabase.from('ajustes').select('nombre_tienda,whatsapp').eq('id', 1).maybeSingle(),
   ]);
 
   return {
@@ -110,18 +107,15 @@ export async function cargarVitrina() {
   };
 }
 
-/**
- * Guarda el pedido para tu registro (aparece en Admin → Pedidos).
- * Dentro de la columna `items` se guardan las claves name/price/qty, igual que los pedidos anteriores.
- */
+/** Guarda el pedido para tu registro (aparece en Admin → Pedidos). */
 export async function guardarPedido({ codigo, cliente, nota, articulos, total }) {
   if (!supabase) return;
   exigirSinError(
-    await supabase.from('orders').insert({
-      code: codigo,
-      customer_name: cliente || null,
-      note: nota || null,
-      items: articulos.map((a) => ({ id: a.id, name: a.nombre, price: a.precio, qty: a.cantidad })),
+    await supabase.from('pedidos').insert({
+      codigo,
+      cliente: cliente || null,
+      nota: nota || null,
+      articulos: articulos.map((a) => ({ id: a.id, nombre: a.nombre, precio: a.precio, cantidad: a.cantidad })),
       total,
     }),
   );
@@ -156,7 +150,7 @@ export const cerrarSesion = () => supabase.auth.signOut();
 /** Todos los productos, también los ocultos. */
 export async function listarProductosAdmin() {
   const filas = exigirSinError(
-    await supabase.from('products').select('*').order('category').order('name'),
+    await supabase.from('productos').select('*').order('categoria').order('nombre'),
   );
   return filas.map(aProducto);
 }
@@ -164,30 +158,30 @@ export async function listarProductosAdmin() {
 /** Crea el producto (si no trae `id`) o lo actualiza (si trae `id`). */
 export async function guardarProducto({ id, nombre, categoria, descripcion, precio, activo, imagenUrl }) {
   const fila = {
-    name: nombre,
-    category: categoria,
-    description: descripcion || null,
-    price: precio,
-    active: activo,
-    image_url: imagenUrl,
+    nombre,
+    categoria,
+    descripcion: descripcion || null,
+    precio,
+    activo,
+    imagen_url: imagenUrl,
   };
   exigirSinError(
     id
-      ? await supabase.from('products').update(fila).eq('id', id)
-      : await supabase.from('products').insert(fila),
+      ? await supabase.from('productos').update(fila).eq('id', id)
+      : await supabase.from('productos').insert(fila),
   );
 }
 
 export async function eliminarProducto(id) {
-  exigirSinError(await supabase.from('products').delete().eq('id', id));
+  exigirSinError(await supabase.from('productos').delete().eq('id', id));
 }
 
 export async function cambiarVisibilidadProducto(id, activo) {
-  exigirSinError(await supabase.from('products').update({ active: activo }).eq('id', id));
+  exigirSinError(await supabase.from('productos').update({ activo }).eq('id', id));
 }
 
 export async function actualizarPrecioProducto(id, precio) {
-  exigirSinError(await supabase.from('products').update({ price: precio }).eq('id', id));
+  exigirSinError(await supabase.from('productos').update({ precio }).eq('id', id));
 }
 
 /* ------------------------------------------------------------------ */
@@ -228,10 +222,10 @@ export async function eliminarImagen(urlImagen) {
 export async function listarCompras() {
   const filas = exigirSinError(
     await supabase
-      .from('purchases')
-      .select('*, products(name)')
-      .order('purchased_at', { ascending: false })
-      .order('created_at', { ascending: false })
+      .from('compras')
+      .select('*, productos(nombre)')
+      .order('fecha_compra', { ascending: false })
+      .order('creado_en', { ascending: false })
       .limit(100),
   );
   return filas.map(aCompra);
@@ -239,17 +233,17 @@ export async function listarCompras() {
 
 export async function registrarCompra(compra) {
   exigirSinError(
-    await supabase.from('purchases').insert({
-      product_id: compra.productoId,
-      supplier: compra.proveedor || null,
-      quantity: compra.cantidad,
-      unit_cost: compra.costoUnitario,
-      cost_includes_iva: compra.costoIncluyeIva,
+    await supabase.from('compras').insert({
+      producto_id: compra.productoId,
+      proveedor: compra.proveedor || null,
+      cantidad: compra.cantidad,
+      costo_unitario: compra.costoUnitario,
+      costo_incluye_iva: compra.costoIncluyeIva,
       iva_pct: compra.ivaPct,
-      margin_pct: compra.margenPct,
-      net_cost: compra.costoNeto,
-      suggested_price: compra.precioSugerido,
-      purchased_at: compra.fechaCompra,
+      margen_pct: compra.margenPct,
+      costo_neto: compra.costoNeto,
+      precio_sugerido: compra.precioSugerido,
+      fecha_compra: compra.fechaCompra,
     }),
   );
 }
@@ -261,13 +255,13 @@ export async function registrarCompra(compra) {
 /** Últimos 100 pedidos, el más reciente primero. */
 export async function listarPedidos() {
   const filas = exigirSinError(
-    await supabase.from('orders').select('*').order('created_at', { ascending: false }).limit(100),
+    await supabase.from('pedidos').select('*').order('creado_en', { ascending: false }).limit(100),
   );
   return filas.map(aPedido);
 }
 
 export async function eliminarPedido(id) {
-  exigirSinError(await supabase.from('orders').delete().eq('id', id));
+  exigirSinError(await supabase.from('pedidos').delete().eq('id', id));
 }
 
 /* ------------------------------------------------------------------ */
@@ -276,20 +270,20 @@ export async function eliminarPedido(id) {
 
 /** Devuelve los ajustes, o null si todavía no existe la fila. */
 export async function leerAjustes() {
-  const fila = exigirSinError(await supabase.from('settings').select('*').eq('id', 1).maybeSingle());
+  const fila = exigirSinError(await supabase.from('ajustes').select('*').eq('id', 1).maybeSingle());
   return fila ? aAjustes(fila) : null;
 }
 
-/** La tabla settings tiene una sola fila (id = 1); se crea o se actualiza. */
+/** La tabla ajustes tiene una sola fila (id = 1); se crea o se actualiza. */
 export async function guardarAjustes({ nombreTienda, whatsapp, ivaPct, margenSugeridoPct }) {
   exigirSinError(
-    await supabase.from('settings').upsert({
+    await supabase.from('ajustes').upsert({
       id: 1,
-      store_name: nombreTienda,
-      whatsapp_number: whatsapp,
+      nombre_tienda: nombreTienda,
+      whatsapp,
       iva_pct: ivaPct,
-      default_margin_pct: margenSugeridoPct,
-      updated_at: new Date().toISOString(),
+      margen_sugerido_pct: margenSugeridoPct,
+      actualizado_en: new Date().toISOString(),
     }),
   );
 }
